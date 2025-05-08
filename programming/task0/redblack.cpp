@@ -1,8 +1,7 @@
 //Выполнить любое задание для красно-черного дерева. 
 //Написать функции для создания дерева, удаления элемента, вставки нового элемента, симметричного обхода.
 //15. Дано дерево. Вывести все листья.
-//7
-//10 5 15 3 7 12 17
+//7       10 5 15 3 7 12 17
 
 #include <iostream>
 #include <cmath>
@@ -26,13 +25,19 @@ struct tree {
 
 //левый поворот
 void left_rotate(tree*& tr, tree* x) {
+    if (!x || !x->right) return;
+
     tree* y = x->right;
     x->right = y->left;
     if (y->left) {
         y->left->parent = x;
     }
     y->parent = x->parent;
-    if (x->parent->left == x) {
+
+    if (!x->parent) {
+        tr = y;
+    }
+    else if (x->parent->left == x) {
         x->parent->left = y;
     }
     else {
@@ -48,13 +53,19 @@ void left_rotate(tree*& tr, tree* x) {
 
 //правый поворот
 void right_rotate(tree*& tr, tree* x) {
+    if (!x || !x->left) return;
+
     tree* y = x->left;
     x->left = y->right;
     if (y->right) {
         y->right->parent = x;
     }
     y->parent = x->parent;
-    if (x->parent->left == x) {
+
+    if (!x->parent) {
+        tr = y;
+    } 
+    else if (x->parent->left == x) {
         x->parent->left = y;
     }
     else {
@@ -163,7 +174,9 @@ void insert_case_3(tree*& tr, tree* X) {
 
 void insert_case_4(tree*& tr, tree* X) { 
     tree* g = grandfather(X);
+    if (!g) return;
     tree* p = X->parent;
+    if (!p) return;
     if (p->right == X && g->left == p) {
         left_rotate(tr, X);
         X = X->left;
@@ -177,7 +190,9 @@ void insert_case_4(tree*& tr, tree* X) {
 
 void insert_case_5(tree*& tr, tree* X) {
     tree* g = grandfather(X);
+    if (!g) return;
     tree* p = X->parent;
+    if (!p) return;
     p->color = 'b';
     g->color = 'r';
     if (X == p->right) {
